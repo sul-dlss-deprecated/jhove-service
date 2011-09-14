@@ -1,0 +1,41 @@
+
+
+http://davidbrunton.com/2010/03/18/versioning-bags/
+David Brunton investigates versioning of bags using CDL's ReDD
+
+http://groups.google.com/group/digital-curation/browse_thread/thread/ad054277cb0318ce/5717bfeb95f2a957?lnk=gst&q=versioning#5717bfeb95f2a957
+digital-curation group discusses above blog post
+Also touches on CDLs Dflat design for a storage architecture
+
+http://tonluong.com/projects/digital-packaging-format
+Ton Luong writes about an alternative design combining GIT, JSON, CouchDB, & Parchive for the functinality of versioning, transport, metadata formatting and storage, and error correction.
+- http://couchdb.apache.org/docs/overview.html 
+
+http://groups.google.com/group/digital-curation/browse_thread/thread/6c1ad7d6b35ec721/b3293ef6add8ac25?lnk=gst&q=versioning#b3293ef6add8ac25
+Contines the discussion of bag versioning, including why Dflat is being used by CDL instead of BagIt for long-term managment of data
+https://confluence.ucop.edu/display/Curation/Storage 
+https://confluence.ucop.edu/display/Curation/CAN 
+https://confluence.ucop.edu/display/Curation/D-flat 
+https://confluence.ucop.edu/display/Curation/Home 
+other posts inquire about the possible advantages of ReDD over GIT
+
+http://groups.google.com/group/digital-curation/web/curatecamp-2010-versioning?hl=en
+Looks like there was a breakout session to discuss versioning at CurateCamp-2010
+
+http://inkdroid.org/journal/2010/08/17/version-control-and-digital-curation/
+Ed Summers wrote a blog post
+
+http://groups.google.com/group/digital-curation/browse_thread/thread/1f1b6b0629699a8e/c9816863970db69f?lnk=gst&q=versioning#c9816863970db69f
+Discusses a proposal for a RESTful Bag Server, which includes versioning semantics
+
+...
+B. Version handling – Chris confirmed that the best approach to handle 
+the awareness of most current version of an uploaded bag would be to 
+dedicate a symbolic link location (/version/latest). 
+
+
+=======================
+
+https://www.escidoc.org/media/docs/ges-versioning-article.pdf
+Versioning of Digital Objects in a Fedora-based Repositor
+Matthias Razum, Frank Schwichtenberg, Rozita Fridman
