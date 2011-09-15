@@ -8,17 +8,17 @@ describe JhoveService do
     @fixtures = File.expand_path(File.dirname(__FILE__) + '/../fixtures')
     @bin_dir = File.expand_path(File.dirname(__FILE__) + '/../../bin')
     @content_dir = File.join(@fixtures,'test_files')
-    @temp_dir =  File.join(@fixtures,'temp')
-    @jhove_service = JhoveService.new(@temp_dir)
+    @target_dir =  File.join(@fixtures,'target')
+    @jhove_service = JhoveService.new(@target_dir)
   end
 
 
-  it "should have a temp directory" do
-    @jhove_service.temp_dir.should eql(File.join(@fixtures,'temp'))
+  it "should have a target directory" do
+    @jhove_service.target_dir.should eql(File.join(@fixtures,'target'))
   end
 
-  it "can generate a temp file path" do
-    @jhove_service.temp_file('xyz').should eql(File.join(@temp_dir,'xyz'))
+  it "can generate a target file path" do
+    @jhove_service.target_file('xyz').should eql(File.join(@target_dir,'xyz'))
   end
 
   it "can generate a script file path" do
@@ -44,8 +44,8 @@ describe JhoveService do
   end
 
   it "can do cleanup" do
-    jhove_output = File.join(@temp_dir,'jhove_output.xml')
-    tech_md = File.join(@temp_dir,'technicalMetadata.xml')
+    jhove_output = File.join(@target_dir,'jhove_output.xml')
+    tech_md = File.join(@target_dir,'technicalMetadata.xml')
     FileUtils.touch(jhove_output)
     File.exist?(jhove_output).should eql true
     FileUtils.touch(tech_md)

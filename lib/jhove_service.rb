@@ -3,14 +3,14 @@ require 'fileutils'
 
 class JhoveService
 
-  attr_accessor :temp_dir
+  attr_accessor :target_dir
 
-  def initialize(temp_dir = '/tmp')
-    @temp_dir = temp_dir
+  def initialize(target_dir)
+    @target_dir = target_dir
   end
 
-  def temp_file(basename)
-    File.join(@temp_dir, basename)
+  def target_file(basename)
+    File.join(@target_dir, basename)
   end
 
   def bin_file(basename)
@@ -20,7 +20,7 @@ class JhoveService
 
     # Run JHOVE to characterize all content files
   def run_jhove(content_dir)
-    jhove_output = temp_file('jhove_output.xml')
+    jhove_output = target_file('jhove_output.xml')
     jhove_script = bin_file('jhoveToolkit.sh')
     `#{jhove_script} #{content_dir} > #{jhove_output}`
     exitcode = $?.exitstatus
@@ -32,7 +32,7 @@ class JhoveService
 
     # Convert jhove output it to technicalMetadata
     def create_technical_metadata(jhove_output)
-      tech_md = temp_file('technicalMetadata.xml')
+      tech_md = target_file('technicalMetadata.xml')
       xslt = bin_file('jhove-filter.xsl')
       transform(jhove_output, tech_md, xslt)
       tech_md
@@ -55,9 +55,9 @@ class JhoveService
   end
 
   def cleanup()
-    entry = temp_file('jhove_output.xml')
+    entry = target_file('jhove_output.xml')
     FileUtils.remove_entry(entry) if File.exist?(entry)
-    entry = temp_file('technicalMetadata.xml')
+    entry = target_file('technicalMetadata.xml')
     FileUtils.remove_entry(entry) if File.exist?(entry)
   end
 
