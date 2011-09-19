@@ -4,7 +4,7 @@ $:.unshift lib unless $:.include?(lib)
   
 Gem::Specification.new do |s|
   s.name        = "jhove-service"
-  s.version     = "0.1.1"
+  s.version     = "0.1.2"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Richard Anderson"]
   s.email       = ["rnanders@stanford.edu"]
@@ -25,6 +25,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", "< 2.0" # We're not ready to upgrade to rspec 2
   s.add_development_dependency "yard"
  
-  s.files        = Dir.glob("lib/**/*") + %w(LICENSE README.rdoc)
+  s.files        = Dir.glob("{bin,lib}/**/*") + %w(LICENSE README.rdoc)
   s.require_path = 'lib'
 end
