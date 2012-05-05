@@ -36,7 +36,7 @@ describe JhoveService do
 
   it "can create technical metadata" do
     tech_md = @jhove_service.create_technical_metadata(File.join(@fixtures,'jhove_output_426.xml'))
-    #puts IO.read(tech_md)
+    puts IO.read(tech_md)
     tech_xml = Nokogiri::XML(IO.read(tech_md))
     tech_xml.root.name.should eql('jhove')
     nodes = tech_xml.xpath('//jhove:repInfo', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')
