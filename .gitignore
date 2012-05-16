@@ -1,9 +1,8 @@
-.DS_Store
-.yardoc
-coverage
+.bundle/
+.idea/
+.yardoc/
+coverage/
 coverage.data
-pkg
-rdoc
-.bundle
-Gemfile.lock
-.idea
+doc/
+spec/fixtures/target/
+pkg/

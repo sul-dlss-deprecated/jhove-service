@@ -29,7 +29,7 @@ http://groups.google.com/group/digital-curation/browse_thread/thread/1f1b6b06296
 Discusses a proposal for a RESTful Bag Server, which includes versioning semantics
 
 ...
-B. Version handling – Chris confirmed that the best approach to handle 
+B. Version handling: Chris confirmed that the best approach to handle
 the awareness of most current version of an uploaded bag would be to 
 dedicate a symbolic link location (/version/latest). 
 

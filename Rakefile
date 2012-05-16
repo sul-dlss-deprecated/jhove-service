@@ -18,25 +18,23 @@ Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.spec_files = FileList['spec/**/*_spec.rb', 'test/**/*.rb']
 end
 
-Spec::Rake::SpecTask.new(:functional) do |spec|
-  spec.libs << 'lib' << 'spec' << 'test'
-  spec.pattern = 'spec/**/*_spec.rb', 'test/**/*.rb'
+Spec::Rake::SpecTask.new(:rcov) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.pattern = 'spec/**/*_spec.rb'
   spec.rcov = true
   spec.rcov_opts = %w{--exclude spec\/*,gems\/*,ruby\/* --aggregate coverage.data}
 end
 
-Spec::Rake::SpecTask.new(:unit) do |spec|
-  spec.libs << 'lib' << 'spec'  
-  spec.pattern = 'test/**/*.rb'
-  spec.rcov = true
-end
-
-      task :rcov => ["functional"] do
-end
-
 task :clean do
-  puts 'Cleaning old coverage.data'
+  puts 'Cleaning old coverage'
   FileUtils.rm('coverage.data') if(File.exists? 'coverage.data')
+  FileUtils.rm_r('coverage') if(File.exists? 'coverage')
+  puts 'Cleaning .yardoc and doc folders'
+  FileUtils.rm_r('.yardoc') if(File.exists? '.yardoc')
+  FileUtils.rm_r('doc') if(File.exists? 'doc')
+  puts 'Cleaning spec/fixtures/target'
+  FileUtils.rm_r('spec/fixtures/target') if(File.exists? 'spec/fixtures/target')
+
 end
 
 task :default => [:rcov, :doc]

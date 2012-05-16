@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jhove xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hul.harvard.edu/ois/xml/ns/jhove" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/jhove http://hul.harvard.edu/ois/xml/xsd/jhove/1.6/jhove.xsd" name="JhoveToolkit" release="1.0" date="2009-08-06">
- <date>2011-09-13T15:27:55-06:00</date>
+ <date>2012-05-16T07:59:36-06:00</date>
  <repInfo uri="00000426.html">
   <reportingModule release="1.3" date="2006-09-05">HTML-hul</reportingModule>
   <format>HTML</format>
@@ -1543,11 +1543,23 @@
    </property>
   </properties>
  </repInfo>
- <repInfo uri="BagVersioning.txt">
-  <reportingModule release="1.5" date="2011-02-03">UTF8-hul</reportingModule>
-  <format>UTF-8</format>
-  <status>Not well-formed</status>
-  <mimeType>text/plain; charset=UTF-8</mimeType>
-  <note>Additional representation information includes the line endings: CR, LF, or CRLF</note>
+ <repInfo uri="sample.txt">
+  <reportingModule release="1.3" date="2006-09-05">ASCII-hul</reportingModule>
+  <format>ASCII</format>
+  <status>Well-Formed and valid</status>
+  <mimeType>text/plain; charset=US-ASCII</mimeType>
+  <properties>
+   <property>
+    <name>ASCIIMetadata</name>
+    <values arity="List" type="Property">
+    <property>
+     <name>LineEndings</name>
+     <values arity="List" type="String">
+      <value>LF</value>
+     </values>
+    </property>
+    </values>
+   </property>
+  </properties>
  </repInfo>
 </jhove>
