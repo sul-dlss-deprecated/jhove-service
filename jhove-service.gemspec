@@ -25,6 +25,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", "< 2.0" # We're not ready to upgrade to rspec 2
   s.add_development_dependency "yard"
  
-  s.files        = Dir.glob("{bin,lib}/**/*") + %w(LICENSE README.rdoc)
+  s.files        = Dir.glob("{bin,lib}/**/*") + %w(LICENSE.rdoc README.rdoc)
   s.require_path = 'lib'
 end
