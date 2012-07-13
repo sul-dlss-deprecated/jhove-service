@@ -17,7 +17,7 @@ for more details
 - <b>0.1.0</b> First release
 - <b>0.1.1</b> Rename temp to target (location in which to create output)
 - <b>0.2.0</b> Change method of transforming JHOVE output to technicalMetadata
-
+- <b>0.2.1</b> Enable processing of a subset of files in a directory
 == Copyright
 
 Copyright (c) 2012 Stanford University Library. See LICENSE for details.

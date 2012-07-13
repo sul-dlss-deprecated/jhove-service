@@ -4,10 +4,10 @@ require 'jhove_technical_metadata'
 
 class JhoveService
 
-  # @return [String] The directory in which program files are located
+  # @return [Pathname] The directory in which program files are located
   attr_accessor :bin_pathname
 
-  # @return [String] The directory in which output should be generated
+  # @return [Pathname] The directory in which output should be generated
   attr_accessor :target_pathname
 
   # @return [String] The druid of the object, which gets inserted in the root element of the output
@@ -29,16 +29,30 @@ class JhoveService
     target_pathname.join('technicalMetadata.xml')
   end
 
-  # @param [String] content_dir the directory path containing the files to be analyzed by JHOVE
+  # @param content_dir [String] the directory path containing the files to be analyzed by JHOVE
+  # @param fileset_file [String] the pathname of the file listing which files should be processed.  If nil, process all files.
   # @return [String] Run JHOVE to characterize all content files, returning the output file path
-  def run_jhove(content_dir)
-    jhove_script = bin_pathname.join('jhoveToolkit.sh').to_s
-    `#{jhove_script} #{content_dir} > #{jhove_output.to_s}`
+  def run_jhove(content_dir, fileset_file=nil)
+    `#{get_jhove_command(content_dir, fileset_file)}`
     exitcode = $?.exitstatus
     if (exitcode != 0)
       raise "Error when running JHOVE against #{content_dir}"
     end
     jhove_output.to_s
+  end
+
+  # @param content_dir [String] the directory path containing the files to be analyzed by JHOVE
+  # @param fileset_file [String] the pathname of the file listing which files should be processed.  If nil, process all files.
+  # @return [String] The jhove-toolkit command to be exectuted in a system call
+  def get_jhove_command(content_dir, fileset_file=nil)
+    if fileset_file.nil?
+      args = "edu.stanford.sulair.jhove.JhoveCommandLine #{content_dir}"
+    else
+      args = "edu.stanford.sulair.jhove.JhoveFileset #{content_dir} #{fileset_file}"
+    end
+    jhove_script = bin_pathname.join('jhoveToolkit.sh').to_s
+    jhove_cmd = "#{jhove_script} #{args} > #{jhove_output.to_s}"
+    jhove_cmd
   end
 
   # @param [String] jhove_output The full path of the file containing JHOVE output to be transformed to technical metadata
@@ -53,32 +67,6 @@ class JhoveService
     # Feed the parser some XML
     parser.parse(output_pathname.open('rb'))
     tech_md_output.to_s
-  end
-
-  # @deprecated
-  # Convert jhove output it to technicalMetadata
-  def create_technical_metadata_old(jhove_output_file)
-    tech_md = target_pathname.join('technicalMetadata.xml').to_s
-    xslt = bin_file('jhove-filter.xsl')
-    transform(jhove_output_file, tech_md, xslt)
-    tech_md
-  end
-
-  # @deprecated
-  # Perform a generic file to file transform on local system
-  # @param [String, String, String, String]
-  def transform(input, output, xslt, params=nil)
-    xslt_script = bin_file('xslt_transform.sh')
-    if params
-      `#{xslt_script} #{input} #{output} #{xslt} #{params}`
-    else
-      `#{xslt_script} #{input} #{output} #{xslt}`
-    end
-    exitcode = $?.exitstatus
-    if (exitcode != 0)
-      raise "Error when transforming #{input} to #{output} using #{xslt}"
-    end
-    output
   end
 
   # @return [void] Cleanup the temporary workspace used to hold the metadata outputs

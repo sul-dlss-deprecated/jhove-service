@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    jhove-service (0.2.0)
+    jhove-service (0.2.1)
       nokogiri (>= 1.4.3.1)
 
 GEM
