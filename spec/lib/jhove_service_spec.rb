@@ -4,29 +4,34 @@ require 'jhove_service'
 describe JhoveService do
 
   before :all do
-    @fixtures = File.expand_path(File.dirname(__FILE__) + '/../fixtures')
-    @bin_dir = File.expand_path(File.dirname(__FILE__) + '/../../bin')
-    @content_dir = File.join(@fixtures,'test_files')
-    @target_dir =  File.join(@fixtures,'target')
-    Dir.mkdir(@target_dir) unless File.directory?(@target_dir)
-    @jhove_service = JhoveService.new(@target_dir)
+    @bin = Pathname(File.dirname(__FILE__)).join('../../bin').realpath
+    @fixtures = Pathname(File.dirname(__FILE__)).join('../fixtures').realpath
+    @content_dir = @fixtures.join('test_files')
+    @samples = @fixtures.join('samples')
+    @temp =  @fixtures.join('temp')
+    @temp.mkpath unless @temp.exist?
+    @jhove_service = JhoveService.new(@temp.to_s)
+  end
+
+  after :all do
+    @temp.rmtree if @temp.exist?
   end
 
   it "should have a target directory" do
-    @jhove_service.target_pathname.should eql Pathname.new(@fixtures).join('target')
+    @jhove_service.target_pathname.should eql @fixtures.join('temp')
   end
 
   specify "JhoveService#get_jhove_command" do
     jhove_cmd = @jhove_service.get_jhove_command(@content_dir)
-    jhove_cmd.should == "/Users/rnanders/Code/Ruby/jhove-service/bin/jhoveToolkit.sh " +
-        "edu.stanford.sulair.jhove.JhoveCommandLine " +
-        "/Users/rnanders/Code/Ruby/jhove-service/spec/fixtures/test_files " +
-        "> /Users/rnanders/Code/Ruby/jhove-service/spec/fixtures/target/jhove_output.xml"
+    jhove_cmd.should == @bin.join('jhoveToolkit.sh').to_s  +
+        " edu.stanford.sulair.jhove.JhoveCommandLine " +
+        @fixtures.join('test_files').to_s +
+        " > " + @temp.join('jhove_output.xml').to_s
     jhove_cmd = @jhove_service.get_jhove_command(@content_dir, "/my/fileset.txt")
-    jhove_cmd.should == "/Users/rnanders/Code/Ruby/jhove-service/bin/jhoveToolkit.sh " +
-        "edu.stanford.sulair.jhove.JhoveFileset " +
-        "/Users/rnanders/Code/Ruby/jhove-service/spec/fixtures/test_files /my/fileset.txt " +
-        "> /Users/rnanders/Code/Ruby/jhove-service/spec/fixtures/target/jhove_output.xml"
+    jhove_cmd.should == @bin.join('jhoveToolkit.sh').to_s  +
+        " edu.stanford.sulair.jhove.JhoveFileset " +
+        @fixtures.join('test_files').to_s + " /my/fileset.txt" +
+        " > " + @temp.join('jhove_output.xml').to_s
   end
 
   it "can run jhove against a directory" do
@@ -39,7 +44,7 @@ describe JhoveService do
   end
 
   it "can run jhove against a subset of files in a directory" do
-    jhove_output = @jhove_service.run_jhove(@content_dir, File.join(@fixtures,'fileset.txt'))
+    jhove_output = @jhove_service.run_jhove(@content_dir, @fixtures.join('fileset.txt'))
     #puts IO.read(jhove_output)
     jhove_xml = Nokogiri::XML(IO.read(jhove_output))
     jhove_xml.root.name.should eql('jhove')
@@ -60,6 +65,13 @@ describe JhoveService do
     tech_xml.root.name.should eql('technicalMetadata')
     nodes = tech_xml.xpath('//file')
     nodes.size.should eql(3)
+  end
+
+  specify "JhoveService#upgrade_technical_metadata" do
+    old_tm_file = @samples.join('technicalMetadata-old.xml')
+    new_tm = @jhove_service.upgrade_technical_metadata(old_tm_file.read)
+    expected_tm = @samples.join('technicalMetadata.xml').read
+    new_tm.gsub(/datetime='.*?'/,'').should be_equivalent_to(expected_tm.gsub(/datetime='.*?'/,''))
   end
 
   it "can do cleanup" do

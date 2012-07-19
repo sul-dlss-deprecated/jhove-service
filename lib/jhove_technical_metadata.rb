@@ -8,13 +8,16 @@ require 'pathname'
 # due to XSLT's behavior of loading both the input and output objects into memory.
 class JhoveTechnicalMetadata < Nokogiri::XML::SAX::Document
 
+  # @return [IO] the output stream for the result
+  attr_accessor :ios
+
+  # @return [String] The druid of the object, which gets inserted in the root element of the output
+  attr_accessor :digital_object_id
+
   def initialize()
     @indent = 0
     @ios = STDOUT #File.open(STDOUT, 'w')
   end
-
-  # @return [String] The druid of the object, which gets inserted in the root element of the output
-  attr_accessor :digital_object_id
 
   # @param [Pathname] pathname the location of the technicalMetadata.xml file to be created
   # @return [void] Opens the output stream pointing to the specified file
