@@ -1,2 +1,6 @@
-00000426.html
-00000426.jp2
+audio/Blue Square.wav
+audio/harmonica.mp3
+bookpage.jpg
+hocr.html
+minimal.xml
+story.txt

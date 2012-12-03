@@ -35,21 +35,21 @@ describe JhoveService do
   end
 
   it "can run jhove against a directory" do
-    jhove_output = @jhove_service.run_jhove(@content_dir)
-    #puts IO.read(jhove_output)
-    jhove_xml = Nokogiri::XML(IO.read(jhove_output))
-    jhove_xml.root.name.should eql('jhove')
-    nodes = jhove_xml.xpath('//jhove:repInfo', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')
-    nodes.size.should eql(3)
-  end
-
-  it "can run jhove against a subset of files in a directory" do
-    jhove_output = @jhove_service.run_jhove(@content_dir, @fixtures.join('fileset.txt'))
+    jhove_output = @jhove_service.run_jhove(@content_dir.join('audio'))
     #puts IO.read(jhove_output)
     jhove_xml = Nokogiri::XML(IO.read(jhove_output))
     jhove_xml.root.name.should eql('jhove')
     nodes = jhove_xml.xpath('//jhove:repInfo', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')
     nodes.size.should eql(2)
+  end
+
+  it "can run jhove against a list of files in a directory" do
+    jhove_output = @jhove_service.run_jhove(@content_dir, @fixtures.join('fileset.txt'))
+    #puts IO.read(jhove_output)
+    jhove_xml = Nokogiri::XML(IO.read(jhove_output))
+    jhove_xml.root.name.should eql('jhove')
+    nodes = jhove_xml.xpath('//jhove:repInfo', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')
+    nodes.size.should eql(6)
   end
 
   it "should raise an exception if directory does not exist" do
@@ -58,13 +58,13 @@ describe JhoveService do
   end
 
   it "can create technical metadata" do
-    jhove_output = @jhove_service.run_jhove(@content_dir)
+    jhove_output = @jhove_service.run_jhove(@content_dir, @fixtures.join('fileset.txt'))
     tech_md_output = @jhove_service.create_technical_metadata(jhove_output)
     #puts IO.read(tech_md_output)
     tech_xml = Nokogiri::XML(IO.read(tech_md_output))
     tech_xml.root.name.should eql('technicalMetadata')
     nodes = tech_xml.xpath('//file')
-    nodes.size.should eql(3)
+    nodes.size.should eql(6)
   end
 
   specify "JhoveService#upgrade_technical_metadata" do
