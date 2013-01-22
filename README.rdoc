@@ -19,6 +19,9 @@ for more details
 - <b>0.2.0</b> Change method of transforming JHOVE output to technicalMetadata
 - <b>0.2.1</b> Enable processing of a subset of files in a directory
 - <b>0.2.2</b> Enable upgrading of old technical metadata to the new format
+- <b>1.0.0</b> Update JhoveToolkit.jar to v1.0.0. Fix output for filetypes w/o jhove module (bytestreams)
+- <b>1.0.1</b> Updated to use new sul-gems server and new lyberteam-gems-devel utility
+- <b>1.0.2</b> Fixed negative indentation problem for empty elements( e.g. <elem/>)
 == Copyright
 
-Copyright (c) 2012 Stanford University Library. See LICENSE for details.
+Copyright (c) 2013 Stanford University Library. See LICENSE for details.

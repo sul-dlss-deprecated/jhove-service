@@ -74,6 +74,40 @@ describe JhoveService do
     new_tm.gsub(/datetime='.*?'/,'').should be_equivalent_to(expected_tm.gsub(/datetime='.*?'/,''))
   end
 
+  specify "JhoveService#upgrade_technical_metadata for input with empty elements" do
+    old_tm = <<-EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<jhove xmlns="http://hul.harvard.edu/ois/xml/ns/jhove" xmlns:mix="http://www.loc.gov/mix/v10" xmlns:textmd="info:lc/xmlns/textMD-v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/jhove http://cosimo.stanford.edu/standards/jhove/v1/jhove.xsd" name="JhoveToolkit" release="1.0" date="2009-08-06">
+    <repInfo uri="contentMetadata.xml">
+        <format>XML</format>
+        <sigMatch>
+            <module>XML-hul</module>
+        </sigMatch>
+        <mimeType>text/xml</mimeType>
+        <checksums/>
+    </repInfo>
+</jhove>
+    EOF
+    new_tm = @jhove_service.upgrade_technical_metadata(old_tm)
+    expected_tm = <<-EOF
+<technicalMetadata
+    xmlns:jhove='http://hul.harvard.edu/ois/xml/ns/jhove'
+    xmlns:mix='http://www.loc.gov/mix/v10'
+    xmlns:textmd='info:lc/xmlns/textMD-v3' >
+  <file id='contentMetadata.xml'>
+    <jhove:format>XML</jhove:format>
+    <jhove:sigMatch>
+      <jhove:module>XML-hul</jhove:module>
+    </jhove:sigMatch>
+    <jhove:mimeType>text/xml</jhove:mimeType>
+    <jhove:checksums/>
+  </file>
+</technicalMetadata>
+    EOF
+    new_tm.gsub(/datetime='.*?'/,'').should be_equivalent_to(expected_tm.gsub(/datetime='.*?'/,''))
+  end
+
+
   it "can do cleanup" do
     File.exist?(@jhove_service.jhove_output).should eql true
     File.exist?(@jhove_service.tech_md_output).should eql true

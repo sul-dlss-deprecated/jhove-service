@@ -157,6 +157,8 @@ class JhoveTechnicalMetadata < Nokogiri::XML::SAX::Document
    def jhove_close(tag)
      if @text && tag == @jhove_tag
        output "<jhove:#{@jhove_tag}#{@jhove_attrs}>#{@text}</jhove:#{tag}>"
+     elsif tag == @jhove_tag
+       output "<jhove:#{@jhove_tag}#{@jhove_attrs}/>"
      else
        @indent -=1
        output "</jhove:#{tag}>"
@@ -199,6 +201,8 @@ class JhoveTechnicalMetadata < Nokogiri::XML::SAX::Document
   def mix_close(tag)
     if @text && tag == @mix_tag
       output "<#{tag}>#{@text}</#{tag}>"
+    elsif tag == @mix_tag
+        output "<#{tag}/>"
     else
       @indent -=1
       output "</#{tag}>"
