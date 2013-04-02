@@ -22,6 +22,7 @@ for more details
 - <b>1.0.0</b> Update JhoveToolkit.jar to v1.0.0. Fix output for filetypes w/o jhove module (bytestreams)
 - <b>1.0.1</b> Updated to use new sul-gems server and new lyberteam-gems-devel utility
 - <b>1.0.2</b> Fixed negative indentation problem for empty elements( e.g. <elem/>)
+- <b>1.0.3</b> Upgraded bin/jhoveApp.jar to copy from Jhove 1.9 release
 == Copyright
 
 Copyright (c) 2013 Stanford University Library. See LICENSE for details.
