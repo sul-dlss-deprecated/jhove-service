@@ -6,3 +6,4 @@ coverage.data
 doc/
 spec/fixtures/target/
 pkg/
+Gemfile.lock
