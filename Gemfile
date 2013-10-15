@@ -1,5 +1,7 @@
 source "http://rubygems.org"
-source "http://sul-gems.stanford.edu"
 
+gem 'nokogiri', '<1.6' if RUBY_VERSION < '1.9'
 # Dependencies are defined in jhove-service.gemspec
 gemspec
+
+gem 'rcov', :platform => :mri_18

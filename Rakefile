@@ -12,15 +12,13 @@ rescue Bundler::BundlerError => e
   exit e.status_code
 end
 
-require 'spec/rake/spectask'
-Spec::Rake::SpecTask.new(:spec) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.spec_files = FileList['spec/**/*_spec.rb', 'test/**/*.rb']
-end
+require 'rspec/core/rake_task'
 
-Spec::Rake::SpecTask.new(:rcov) do |spec|
+RSpec::Core::RakeTask.new(:spec)
+
+RSpec::Core::RakeTask.new(:rcov) do |spec|
   spec.libs << 'lib' << 'spec'
-  spec.pattern = 'spec/**/*_spec.rb'
+  spec.pattern = 'spec/unit_tests/**/*.rb'
   spec.rcov = true
   spec.rcov_opts = %w{--exclude spec\/*,gems\/*,ruby\/* --aggregate coverage.data}
 end
@@ -37,9 +35,5 @@ task :clean do
 
 end
 
-task :default => [:rcov, :doc]
-
-# To release the gem to the DLSS gemserver, run 'rake dlss_release'
-require 'dlss/rake/dlss_release'
-Dlss::Release.new
+task :default => [:spec]
 
