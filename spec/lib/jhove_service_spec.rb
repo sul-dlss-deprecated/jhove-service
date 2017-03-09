@@ -18,17 +18,17 @@ describe JhoveService do
   end
 
   it "should have a target directory" do
-    @jhove_service.target_pathname.should eql @fixtures.join('temp')
+    expect(@jhove_service.target_pathname).to eq @fixtures.join('temp')
   end
 
   specify "JhoveService#get_jhove_command" do
     jhove_cmd = @jhove_service.get_jhove_command(@content_dir)
-    jhove_cmd.should == @bin.join('jhoveToolkit.sh').to_s  +
+    expect(jhove_cmd).to eq @bin.join('jhoveToolkit.sh').to_s  +
         " edu.stanford.sulair.jhove.JhoveCommandLine " +
         @fixtures.join('test_files').to_s +
         " > " + @temp.join('jhove_output.xml').to_s
     jhove_cmd = @jhove_service.get_jhove_command(@content_dir, "/my/fileset.txt")
-    jhove_cmd.should == @bin.join('jhoveToolkit.sh').to_s  +
+    expect(jhove_cmd).to eq @bin.join('jhoveToolkit.sh').to_s  +
         " edu.stanford.sulair.jhove.JhoveFileset " +
         @fixtures.join('test_files').to_s + " /my/fileset.txt" +
         " > " + @temp.join('jhove_output.xml').to_s
@@ -38,23 +38,22 @@ describe JhoveService do
     jhove_output = @jhove_service.run_jhove(@content_dir.join('audio'))
     #puts IO.read(jhove_output)
     jhove_xml = Nokogiri::XML(IO.read(jhove_output))
-    jhove_xml.root.name.should eql('jhove')
+    expect(jhove_xml.root.name).to eq('jhove')
     nodes = jhove_xml.xpath('//jhove:repInfo', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')
-    nodes.size.should eql(2)
+    expect(nodes.size).to eq(2)
   end
 
   it "can run jhove against a list of files in a directory" do
     jhove_output = @jhove_service.run_jhove(@content_dir, @fixtures.join('fileset.txt'))
     #puts IO.read(jhove_output)
     jhove_xml = Nokogiri::XML(IO.read(jhove_output))
-    jhove_xml.root.name.should eql('jhove')
+    expect(jhove_xml.root.name).to eq('jhove')
     nodes = jhove_xml.xpath('//jhove:repInfo', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')
-    nodes.size.should eql(6)
+    expect(nodes.size).to eq(6)
   end
 
   it "should raise an exception if directory does not exist" do
-     lambda{@jhove_service.run_jhove('/temp/dummy/@#')}.
-         should raise_exception(%r{Error when running JHOVE against /temp/dummy/@#})
+     expect(lambda{@jhove_service.run_jhove('/temp/dummy/@#')}).to raise_exception(%r{Error when running JHOVE against /temp/dummy/@#})
   end
 
   it "can create technical metadata" do
@@ -62,16 +61,16 @@ describe JhoveService do
     tech_md_output = @jhove_service.create_technical_metadata(jhove_output)
     #puts IO.read(tech_md_output)
     tech_xml = Nokogiri::XML(IO.read(tech_md_output))
-    tech_xml.root.name.should eql('technicalMetadata')
+    expect(tech_xml.root.name).to eq('technicalMetadata')
     nodes = tech_xml.xpath('//file')
-    nodes.size.should eql(6)
+    expect(nodes.size).to eq(6)
   end
 
   specify "JhoveService#upgrade_technical_metadata" do
     old_tm_file = @samples.join('technicalMetadata-old.xml')
     new_tm = @jhove_service.upgrade_technical_metadata(old_tm_file.read)
     expected_tm = @samples.join('technicalMetadata.xml').read
-    new_tm.gsub(/datetime='.*?'/,'').should be_equivalent_to(expected_tm.gsub(/datetime='.*?'/,''))
+    expect(new_tm.gsub(/datetime='.*?'/,'')).to be_equivalent_to expected_tm.gsub(/datetime='.*?'/,'')
   end
 
   specify "JhoveService#upgrade_technical_metadata for input with empty elements" do
@@ -104,16 +103,16 @@ describe JhoveService do
   </file>
 </technicalMetadata>
     EOF
-    new_tm.gsub(/datetime='.*?'/,'').should be_equivalent_to(expected_tm.gsub(/datetime='.*?'/,''))
+    expect(new_tm.gsub(/datetime='.*?'/,'')).to be_equivalent_to(expected_tm.gsub(/datetime='.*?'/,''))
   end
 
 
   it "can do cleanup" do
-    File.exist?(@jhove_service.jhove_output).should eql true
-    File.exist?(@jhove_service.tech_md_output).should eql true
+    expect(File.exist?(@jhove_service.jhove_output)).to be_truthy
+    expect(File.exist?(@jhove_service.tech_md_output)).to be_truthy
     @jhove_service.cleanup
-    File.exist?(@jhove_service.jhove_output).should eql false
-    File.exist?(@jhove_service.tech_md_output).should eql false
+    expect(File.exist?(@jhove_service.jhove_output)).to be_falsey
+    expect(File.exist?(@jhove_service.tech_md_output)).to be_falsey
   end
 
 end
