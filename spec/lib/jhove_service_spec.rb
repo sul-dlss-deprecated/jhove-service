@@ -23,20 +23,13 @@ describe JhoveService do
 
   specify "JhoveService#get_jhove_command" do
     jhove_cmd = @jhove_service.get_jhove_command(@content_dir)
-    expect(jhove_cmd).to eq @bin.join('jhoveToolkit.sh').to_s  +
-        " edu.stanford.sulair.jhove.JhoveCommandLine " +
-        @fixtures.join('test_files').to_s +
-        " > " + @temp.join('jhove_output.xml').to_s
+    expect(jhove_cmd).to eq "#{@bin.join('jhoveToolkit.sh')} -h xml -o #{@temp.join('jhove_output.xml')} #{@fixtures.join('test_files')}"
     jhove_cmd = @jhove_service.get_jhove_command(@content_dir, "/my/fileset.txt")
-    expect(jhove_cmd).to eq @bin.join('jhoveToolkit.sh').to_s  +
-        " edu.stanford.sulair.jhove.JhoveFileset " +
-        @fixtures.join('test_files').to_s + " /my/fileset.txt" +
-        " > " + @temp.join('jhove_output.xml').to_s
+    expect(jhove_cmd).to eq "#{@bin.join('jhoveToolkit.sh')} -h xml -o #{@temp.join('jhove_output.xml')} edu.stanford.sulair.jhove.JhoveFileset #{@fixtures.join('test_files')} /my/fileset.txt"
   end
 
   it "can run jhove against a directory" do
     jhove_output = @jhove_service.run_jhove(@content_dir.join('audio'))
-    #puts IO.read(jhove_output)
     jhove_xml = Nokogiri::XML(IO.read(jhove_output))
     expect(jhove_xml.root.name).to eq('jhove')
     nodes = jhove_xml.xpath('//jhove:repInfo', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')
@@ -45,7 +38,6 @@ describe JhoveService do
 
   it "can run jhove against a list of files in a directory" do
     jhove_output = @jhove_service.run_jhove(@content_dir, @fixtures.join('fileset.txt'))
-    #puts IO.read(jhove_output)
     jhove_xml = Nokogiri::XML(IO.read(jhove_output))
     expect(jhove_xml.root.name).to eq('jhove')
     nodes = jhove_xml.xpath('//jhove:repInfo', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')
@@ -53,13 +45,12 @@ describe JhoveService do
   end
 
   it "should raise an exception if directory does not exist" do
-     expect(lambda{@jhove_service.run_jhove('/temp/dummy/@#')}).to raise_exception(%r{Error when running JHOVE against /temp/dummy/@#})
+     expect(lambda{@jhove_service.run_jhove('/temp/dummy/@#')}).to raise_exception(%r{Folder /temp/dummy/@# not found})
   end
 
   it "can create technical metadata" do
     jhove_output = @jhove_service.run_jhove(@content_dir, @fixtures.join('fileset.txt'))
     tech_md_output = @jhove_service.create_technical_metadata(jhove_output)
-    #puts IO.read(tech_md_output)
     tech_xml = Nokogiri::XML(IO.read(tech_md_output))
     expect(tech_xml.root.name).to eq('technicalMetadata')
     nodes = tech_xml.xpath('//file')

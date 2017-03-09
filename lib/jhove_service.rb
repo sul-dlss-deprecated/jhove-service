@@ -37,7 +37,7 @@ require 'stringio'
     `#{get_jhove_command(content_dir, fileset_file)}`
     exitcode = $?.exitstatus
     if (exitcode != 0)
-      raise "Error when running JHOVE against #{content_dir.to_s}"
+      raise "Error when running JHOVE against #{content_dir}"
     end
     jhove_output.to_s
   end
@@ -46,13 +46,15 @@ require 'stringio'
   # @param fileset_file [Pathname,String] the pathname of the file listing which files should be processed.  If nil, process all files.
   # @return [String] The jhove-toolkit command to be exectuted in a system call
   def get_jhove_command(content_dir, fileset_file=nil)
+    raise "Folder #{content_dir} not found" unless File.directory? content_dir
+    args = "-h xml -o #{jhove_output} "
     if fileset_file.nil?
-      args = "edu.stanford.sulair.jhove.JhoveCommandLine #{content_dir.to_s}"
+      args += "#{content_dir}"
     else
-      args = "edu.stanford.sulair.jhove.JhoveFileset #{content_dir.to_s} #{fileset_file.to_s}"
+      args += "edu.stanford.sulair.jhove.JhoveFileset #{content_dir} #{fileset_file}"
     end
-    jhove_script = @bin_pathname.join('jhoveToolkit.sh').to_s
-    jhove_cmd = "#{jhove_script} #{args} > #{jhove_output.to_s}"
+    jhove_script = @bin_pathname.join('jhoveToolkit.sh')
+    jhove_cmd = "#{jhove_script} #{args}"
     jhove_cmd
   end
 
