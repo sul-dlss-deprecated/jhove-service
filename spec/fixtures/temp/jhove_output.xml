@@ -1,0 +1,24 @@
+Jhove (Rel. 1.14.6, 2016-05-12)
+ Date: 2017-03-09 13:44:43 PST
+ RepresentationInformation: edu.stanford.sulair.jhove.JhoveCommandLine
+  Status: Not well-formed
+  ErrorMessage: file not found
+ RepresentationInformation: /Users/petucket/Sites/development/jhove-service/spec/fixtures/test_files/audio/Blue Square.wav
+  ReportingModule: BYTESTREAM, Rel. 1.3 (2007-04-10)
+  LastModified: 2017-03-09 13:18:45 PST
+  Size: 683118
+  Format: bytestream
+  Status: Well-Formed and valid
+  SignatureMatches:
+   WAVE-hul
+   WARC-kb
+  MIMEtype: application/octet-stream
+ RepresentationInformation: /Users/petucket/Sites/development/jhove-service/spec/fixtures/test_files/audio/harmonica.mp3
+  ReportingModule: BYTESTREAM, Rel. 1.3 (2007-04-10)
+  LastModified: 2017-03-09 13:18:45 PST
+  Size: 641046
+  Format: bytestream
+  Status: Well-Formed and valid
+  SignatureMatches:
+   WARC-kb
+  MIMEtype: application/octet-stream
