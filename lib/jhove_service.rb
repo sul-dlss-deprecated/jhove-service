@@ -34,25 +34,46 @@ require 'stringio'
   # @param fileset_file [Pathname,String] the pathname of the file listing which files should be processed.  If nil, process all files.
   # @return [String] Run JHOVE to characterize all content files, returning the output file path
   def run_jhove(content_dir, fileset_file=nil)
-    `#{get_jhove_command(content_dir, fileset_file)}`
-    exitcode = $?.exitstatus
-    if (exitcode != 0)
-      raise "Error when running JHOVE against #{content_dir.to_s}"
+    raise "Content #{content_dir} not found" unless File.directory? content_dir
+    if fileset_file.nil? # a simple directory gets called directly
+      exec_command(get_jhove_command(content_dir))
+    else # a filelist gets run one by one, jhove cannot do this out of the box, so we need to run jhove file by file and then assemble the results ourselves into a single XML
+      raise "File list #{fileset_file} not found" unless File.exists? fileset_file
+      files = File.new(fileset_file).readlines
+      raise "File list #{fileset_file} empty" if files.size == 0
+      combined_xml_output = ""
+      jhove_output_xml_ng = Nokogiri::XML('')
+      files.each_with_index do |filename,i| # generate jhove output for each file in a separate xml file
+        full_path_to_file = File.join(content_dir,filename.strip)
+        output_file = @target_pathname.join("jhove_output_#{i}.xml")
+        exec_command(get_jhove_command(full_path_to_file,output_file))
+        jhove_output_xml_ng = File.open(output_file) { |f| Nokogiri::XML(f) }
+        combined_xml_output += jhove_output_xml_ng.css("//repInfo").to_xml # build up an XML string with all output
+        output_file.delete
+      end
+      jhove_output_xml_ng.root.children.each {|n| n.remove} # use of the files we built up above, strip all the children to ge the root jhove node
+      jhove_output_xml_ng.root << combined_xml_output # now add the combined xml for all files
+      File.write(jhove_output, jhove_output_xml_ng.to_xml)
     end
     jhove_output.to_s
   end
 
-  # @param content_dir [Pathname,String] the directory path containing the files to be analyzed by JHOVE
-  # @param fileset_file [Pathname,String] the pathname of the file listing which files should be processed.  If nil, process all files.
+  # @param command [String] the command to execute on the command line
+  # @return [String] exitcode, or raised exception if there is a problem
+  def exec_command(command)
+    `#{command}`
+    exitcode = $?.exitstatus
+    raise "Error when running JHOVE #{command}" if (exitcode != 0)
+    exitcode
+  end
+
+  # @param content [Pathname,String] the directory path or filename containing the folder or file to be analyzed by JHOVE
+  # @param output_file [Pathname,String] the output file to write the XML to, defaults to filename specified in jhove_output
   # @return [String] The jhove-toolkit command to be exectuted in a system call
-  def get_jhove_command(content_dir, fileset_file=nil)
-    if fileset_file.nil?
-      args = "edu.stanford.sulair.jhove.JhoveCommandLine #{content_dir.to_s}"
-    else
-      args = "edu.stanford.sulair.jhove.JhoveFileset #{content_dir.to_s} #{fileset_file.to_s}"
-    end
-    jhove_script = @bin_pathname.join('jhoveToolkit.sh').to_s
-    jhove_cmd = "#{jhove_script} #{args} > #{jhove_output.to_s}"
+  def get_jhove_command(content,output_file = jhove_output)
+    args = "-h xml -o \"#{output_file}\" \\\"#{content}"
+    jhove_script = @bin_pathname.join('jhoveToolkit.sh')
+    jhove_cmd = "#{jhove_script} #{args}"
     jhove_cmd
   end
 
