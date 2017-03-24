@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'pathname'
 require 'jhove_technical_metadata'
 require 'stringio'
+require 'uri'
 
   class JhoveService
 
@@ -83,7 +84,7 @@ require 'stringio'
   # @param path [String] the shared path that will be removed from each file name to ensure the file nodes are relative
   def remove_path_from_file_nodes(jhove_output_xml_ng,path)
     jhove_output_xml_ng.xpath('//jhove:repInfo', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove').each do |filename_node|
-      filename_node.attributes['uri'].value = filename_node.attributes['uri'].value.gsub("#{path}",'').sub(/^\//,'') # remove path and any leading /
+      filename_node.attributes['uri'].value = URI.decode(filename_node.attributes['uri'].value.gsub("#{path}",'').sub(/^\//,'')) # decode and remove path and any leading /
     end
   end
 

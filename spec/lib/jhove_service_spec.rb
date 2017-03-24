@@ -38,7 +38,7 @@ describe JhoveService do
     expect(jhove_xml.root.name).to eq('jhove')
     expect(count_nodes(jhove_xml)).to eq(2)
     expect(count_errors(jhove_xml)).to eq(0)
-    expect(jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')[0].content).to eq('Blue%20Square.wav') # path names should be relative
+    expect(jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')[0].content).to eq('Blue Square.wav') # path names should be relative
     expect(jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')[1].content).to eq('harmonica.mp3')
   end
 
