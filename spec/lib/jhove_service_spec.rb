@@ -38,6 +38,8 @@ describe JhoveService do
     expect(jhove_xml.root.name).to eq('jhove')
     expect(count_nodes(jhove_xml)).to eq(2)
     expect(count_errors(jhove_xml)).to eq(0)
+    expect(jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')[0].content).to eq('Blue Square.wav') # path names should be relative
+    expect(jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')[1].content).to eq('harmonica.mp3')
   end
 
   it "can run jhove against a list of files in a directory" do
@@ -47,6 +49,9 @@ describe JhoveService do
     files_in_set = 6
     expect(count_nodes(jhove_xml)).to eq(files_in_set)
     expect(count_errors(jhove_xml)).to eq(0)
+    jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove').each do |filename_node|
+      expect(filename_node.content.include?(@content_dir.to_s)).to be_falsey # path names should be relative
+    end
     for i in 0..files_in_set-1
       expect(File.exists?(@jhove_service.target_pathname.join("jhove_output_#{i}.xml"))).to be_falsey # it cleans up the temp files it created
     end

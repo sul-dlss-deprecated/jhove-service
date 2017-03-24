@@ -2,6 +2,7 @@ require 'nokogiri'
 require 'pathname'
 require 'jhove_technical_metadata'
 require 'stringio'
+require 'uri'
 
   class JhoveService
 
@@ -37,6 +38,7 @@ require 'stringio'
     raise "Content #{content_dir} not found" unless File.directory? content_dir
     if fileset_file.nil? # a simple directory gets called directly
       exec_command(get_jhove_command(content_dir))
+      jhove_output_xml_ng = File.open(jhove_output) { |f| Nokogiri::XML(f) }
     else # a filelist gets run one by one, jhove cannot do this out of the box, so we need to run jhove file by file and then assemble the results ourselves into a single XML
       raise "File list #{fileset_file} not found" unless File.exists? fileset_file
       files = File.new(fileset_file).readlines
@@ -51,10 +53,11 @@ require 'stringio'
         combined_xml_output += jhove_output_xml_ng.css("//repInfo").to_xml # build up an XML string with all output
         output_file.delete
       end
-      jhove_output_xml_ng.root.children.each {|n| n.remove} # use of the files we built up above, strip all the children to ge the root jhove node
+      jhove_output_xml_ng.root.children.each {|n| n.remove} # use all of the files we built up above, strip all the children to get the root jhove node
       jhove_output_xml_ng.root << combined_xml_output # now add the combined xml for all files
-      File.write(jhove_output, jhove_output_xml_ng.to_xml)
     end
+    remove_path_from_file_nodes(jhove_output_xml_ng,content_dir)
+    File.write(jhove_output, jhove_output_xml_ng.to_xml)
     jhove_output.to_s
   end
 
@@ -75,6 +78,14 @@ require 'stringio'
     jhove_script = @bin_pathname.join('jhoveToolkit.sh')
     jhove_cmd = "#{jhove_script} #{args}"
     jhove_cmd
+  end
+
+  # @param jhove_output_xml_ng [ng_xml_obj] the nokogiri xml output from jhove
+  # @param path [String] the shared path that will be removed from each file name to ensure the file nodes are relative
+  def remove_path_from_file_nodes(jhove_output_xml_ng,path)
+    jhove_output_xml_ng.xpath('//jhove:repInfo', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove').each do |filename_node|
+      filename_node.attributes['uri'].value = URI.decode(filename_node.attributes['uri'].value.gsub("#{path}",'').sub(/^\//,'')) # decode and remove path and any leading /
+    end
   end
 
   # @param [Pathname,String] jhove_pathname The full path of the file containing JHOVE output to be transformed to technical metadata

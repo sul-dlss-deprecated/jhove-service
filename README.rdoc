@@ -10,10 +10,8 @@ This will give you:
   JhoveService
 
 == Build and release procedure
-Modify the version number in jhove-service.gemspec, then push your commits to AFS.  DO NOT TAG!
-Run: 'rake dlss_release' to tag, build, and publish the gem
-See the Rakefile and the LyberCore::DlssRelease task in lyberteam-devel/lib/dlss/rake/dlss_release.rb
-for more details
+Modify the version number in jhove-service.gemspec, then push your commits to github.  DO NOT TAG!
+Run: 'rake release' to tag, build, and publish the gem
 
 == Releases
 - <b>0.1.0</b> First release
@@ -25,7 +23,9 @@ for more details
 - <b>1.0.1</b> Updated to use new sul-gems server and new lyberteam-gems-devel utility
 - <b>1.0.2</b> Fixed negative indentation problem for empty elements( e.g. <elem/>)
 - <b>1.0.3</b> Upgraded bin/jhoveApp.jar to copy from Jhove 1.9 release
+- <b>1.1.0</b> Upgraded bin/*.jar apps to 1.14.6
+- <b>1.1.1</b> Ensure only relative paths are shown in xml output
 
 == Copyright
 
-Copyright (c) 2013 Stanford University Library. See LICENSE for details.
+Copyright (c) 2017 Stanford University Library. See LICENSE for details.
