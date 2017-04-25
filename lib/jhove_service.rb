@@ -74,7 +74,8 @@ require 'uri'
   # @param output_file [Pathname,String] the output file to write the XML to, defaults to filename specified in jhove_output
   # @return [String] The jhove-toolkit command to be exectuted in a system call
   def get_jhove_command(content,output_file = jhove_output)
-    args = "-h xml -o \"#{output_file}\" \\\"#{content}"
+    filename = content.to_s.gsub("'", %q(\\\')).gsub('"', %q(\\\"))  # escape any single or double quotes in the filename
+    args = "-h xml -o \"#{output_file}\" \\\"#{filename}"
     jhove_script = @bin_pathname.join('jhoveToolkit.sh')
     jhove_cmd = "#{jhove_script} #{args}"
     jhove_cmd

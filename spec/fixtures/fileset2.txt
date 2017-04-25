@@ -1,0 +1,5 @@
+audio/harmonica.mp3
+bookpage.jpg
+minimal.xml
+funky file name's here.txt
+file with spaces and a "double quote".txt

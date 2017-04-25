@@ -57,6 +57,21 @@ describe JhoveService do
     end
   end
 
+  it "can run jhove against a list of files that contain single and double quotes" do
+    jhove_output = @jhove_service.run_jhove(@content_dir, @fixtures.join('fileset2.txt'))
+    jhove_xml = Nokogiri::XML(IO.read(jhove_output))
+    expect(jhove_xml.root.name).to eq('jhove')
+    files_in_set = 5
+    expect(count_nodes(jhove_xml)).to eq(files_in_set)
+    expect(count_errors(jhove_xml)).to eq(0)
+    jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove').each do |filename_node|
+      expect(filename_node.content.include?(@content_dir.to_s)).to be_falsey # path names should be relative
+    end
+    for i in 0..files_in_set-1
+      expect(File.exists?(@jhove_service.target_pathname.join("jhove_output_#{i}.xml"))).to be_falsey # it cleans up the temp files it created
+    end
+  end
+
   it "should raise an exception if directory or file list passed to run_jhove does not exist" do
      expect(lambda{@jhove_service.run_jhove('/temp/dummy/@#')}).to raise_exception(%r{Content /temp/dummy/@# not found})
      expect(lambda{@jhove_service.run_jhove(@content_dir,'/my/fileset.txt')}).to raise_exception(%r{File list /my/fileset.txt not found})
