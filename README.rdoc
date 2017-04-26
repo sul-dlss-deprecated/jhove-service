@@ -25,6 +25,7 @@ Run: 'rake release' to tag, build, and publish the gem
 - <b>1.0.3</b> Upgraded bin/jhoveApp.jar to copy from Jhove 1.9 release
 - <b>1.1.0</b> Upgraded bin/*.jar apps to 1.14.6
 - <b>1.1.1</b> Ensure only relative paths are shown in xml output
+- <b>1.1.2</b> Fix bug with filenames that contain single or double quotes
 
 == Copyright
 
