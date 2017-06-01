@@ -4,7 +4,7 @@ $:.unshift lib unless $:.include?(lib)
 
 Gem::Specification.new do |s|
   s.name        = "jhove-service"
-  s.version     = "1.1.2"
+  s.version     = "1.1.3"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Richard Anderson","Peter Mangiafico"]
   s.email       = ["rnanders@stanford.edu","petucket@stanford.edu"]
