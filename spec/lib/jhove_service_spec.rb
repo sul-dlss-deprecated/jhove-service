@@ -57,11 +57,11 @@ describe JhoveService do
     end
   end
 
-  it "can run jhove against a list of files that contain single and double quotes" do
+  it "can run jhove against a list of files that contain special characters (e.g. parens, single and double quotes)" do
     jhove_output = @jhove_service.run_jhove(@content_dir, @fixtures.join('fileset2.txt'))
     jhove_xml = Nokogiri::XML(IO.read(jhove_output))
     expect(jhove_xml.root.name).to eq('jhove')
-    files_in_set = 5
+    files_in_set = 6
     expect(count_nodes(jhove_xml)).to eq(files_in_set)
     expect(count_errors(jhove_xml)).to eq(0)
     jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove').each do |filename_node|
