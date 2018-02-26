@@ -20,9 +20,7 @@ Gem::Specification.new do |s|
   # It will not add these as dependencies if you require lyber-utils for other projects
   s.add_development_dependency "equivalent-xml", ">=0.2.2"
   s.add_development_dependency "rake", ">=0.8.7"
-  s.add_development_dependency "rdoc"
   s.add_development_dependency "rspec"
-  s.add_development_dependency "yard"
 
   s.files        = Dir.glob("{bin,lib}/**/*") + %w(LICENSE.rdoc README.rdoc)
   s.require_path = 'lib'
