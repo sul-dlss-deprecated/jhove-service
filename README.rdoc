@@ -1,4 +1,7 @@
 {<img src="https://travis-ci.org/sul-dlss/jhove-service.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/sul-dlss/jhove-service]
+{<img src="https://coveralls.io/repos/github/sul-dlss/jhove-service/badge.svg" alt="Coverage Status" />}[https://coveralls.io/github/sul-dlss/jhove-service]
+{<img src="https://gemnasium.com/badges/github.com/sul-dlss/jhove-service.svg" alt="Dependency Status" />}[https://gemnasium.com/github.com/sul-dlss/jhove-service]
+{<img src="https://badge.fury.io/rb/jhove-service.svg" alt="Gem Version" />}[https://badge.fury.io/rb/jhove-service]
 
 = jhove-service
 
