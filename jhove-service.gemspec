@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "equivalent-xml", ">=0.2.2"
   s.add_development_dependency "rake", ">=0.8.7"
   s.add_development_dependency "rspec"
+  s.add_development_dependency 'coveralls'
 
   s.files        = Dir.glob("{bin,lib}/**/*") + %w(LICENSE.rdoc README.rdoc)
   s.require_path = 'lib'
