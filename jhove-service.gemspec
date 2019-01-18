@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.email       = ["rnanders@stanford.edu","petucket@stanford.edu"]
   s.summary     = "Generates JHOVE output and/or technicalMetadata"
   s.description = "Generates JHOVE output and/or technicalMetadata"
+  s.homepage    = 'http://github.com/sul-dlss/jhove-service'
 
   s.required_rubygems_version = ">= 1.3.6"
 
