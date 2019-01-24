@@ -52,4 +52,4 @@ for ARG do
 done
 
 # Set the CLASSPATH and invoke the Java loader.
-${JAVA} -Xms128M -Xmx3000M -classpath $CP Jhove $ARGS
+${JAVA} -Xms128M -Xmx6000M -classpath $CP Jhove $ARGS
