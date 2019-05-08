@@ -4,8 +4,9 @@ require 'jhove_technical_metadata'
 require 'stringio'
 require 'uri'
 require 'shellwords'
+require 'open3'
 
-  class JhoveService
+class JhoveService
 
   # @return [Pathname] The directory in which program files are located
   attr_accessor :bin_pathname
@@ -63,12 +64,10 @@ require 'shellwords'
   end
 
   # @param command [String] the command to execute on the command line
-  # @return [String] exitcode, or raised exception if there is a problem
+  # @raises [RuntimeError] if there is a problem running the command
   def exec_command(command)
-    `#{command}`
-    exitcode = $?.exitstatus
-    raise "Error when running JHOVE #{command}" if (exitcode != 0)
-    exitcode
+    stdout, stderr, status = Open3.capture3(command)
+    raise "Error when running JHOVE #{command}:\n#{stderr}" unless status.success?
   end
 
   # @param input_path  [Pathname,String] the directory path or filename containing the folder or file to be analyzed by JHOVE
