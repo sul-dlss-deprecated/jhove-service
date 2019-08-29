@@ -31,13 +31,13 @@
 # Configuration constants:
 
 JHOVE_HOME=`dirname $0`
-JHOVE_VERSION=1.14.6
+JHOVE_VERSION=1.20.1
 
 export JHOVE_HOME
 JAVA_HOME=/etc/alternatives/jre
 JAVA=/usr/bin/java
 
-CP=${JHOVE_HOME}/jhove-apps-${JHOVE_VERSION}.jar:${EXTRA_JARS}
+CP=${JHOVE_HOME}/jhove-apps-${JHOVE_VERSION}.jar:${JHOVE_HOME}/jhove-ext-modules-${JHOVE_VERSION}.jar
 
 # Retrieve a copy of all command line arguments to pass to the application.
 # Since looping over the positional parameters is such a common thing to do in scripts,
