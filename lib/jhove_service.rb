@@ -66,7 +66,7 @@ class JhoveService
   # @param command [String] the command to execute on the command line
   # @raises [RuntimeError] if there is a problem running the command
   def exec_command(command)
-    stdout, stderr, status = Open3.capture3(command)
+    stdout, stderr, status = Open3.capture3(command, chdir: @bin_pathname)
     raise "Error when running JHOVE #{command}:\n#{stderr}" unless status.success?
   end
 
@@ -76,7 +76,7 @@ class JhoveService
   def get_jhove_command(input_path,output_file = jhove_output)
     filename = Shellwords.escape(input_path) # escape any special characters in the path
     args = "-h xml -o \"#{output_file}\" \\\"#{filename}"
-    jhove_script = @bin_pathname.join('jhoveToolkit.sh')
+    jhove_script = './jhoveToolkit.sh'
     jhove_cmd = "#{jhove_script} #{args}"
     jhove_cmd
   end
@@ -84,7 +84,7 @@ class JhoveService
   # @param jhove_output_xml_ng [ng_xml_obj] the nokogiri xml output from jhove
   # @param path [String] the shared path that will be removed from each file name to ensure the file nodes are relative
   def remove_path_from_file_nodes(jhove_output_xml_ng,path)
-    jhove_output_xml_ng.xpath('//jhove:repInfo', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove').each do |filename_node|
+    jhove_output_xml_ng.xpath('//jhove:repInfo', 'jhove' => 'http://schema.openpreservation.org/ois/xml/ns/jhove').each do |filename_node|
       filename_node.attributes['uri'].value = URI.decode(filename_node.attributes['uri'].value.gsub("#{path}",'').sub(/^\//,'')) # decode and remove path and any leading /
     end
   end

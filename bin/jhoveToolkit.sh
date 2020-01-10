@@ -30,14 +30,44 @@
 # adjust your shell's path or revert to the old way (commented out).
 # Configuration constants:
 
-JHOVE_HOME=`dirname $0`
-JHOVE_VERSION=1.20.1
+# Infer JHOVE_HOME from script location
+SCRIPT="${0}"
 
+echo ${SCRIPT}
+
+# Resolve absolute and relative symlinks
+while [ -h "${SCRIPT}" ]; do
+    LS=$( ls -ld "${SCRIPT}" )
+    LINK=$( expr "${LS}" : '.*-> \(.*\)$' )
+    if expr "${LINK}" : '/.*' > /dev/null; then
+        SCRIPT="${LINK}"
+    else
+        SCRIPT="$( dirname "${SCRIPT}" )/${LINK}"
+    fi
+done
+
+# Store absolute location
+CWD="$( pwd )"
+JHOVE_HOME="$( cd "$(dirname "${SCRIPT}" )" && pwd )"
+cd "${CWD}" || exit
 export JHOVE_HOME
+
+JHOVE_VERSION=1.24.0-RC1
 JAVA_HOME=/etc/alternatives/jre
 JAVA=/usr/bin/java
 
 CP=${JHOVE_HOME}/jhove-apps-${JHOVE_VERSION}.jar:${JHOVE_HOME}/jhove-ext-modules-${JHOVE_VERSION}.jar
+CP=${CP}:${JHOVE_HOME}/aiff-hul-1.6.1-RC1.jar
+CP=${CP}:${JHOVE_HOME}/ascii-hul-1.4.1.jar
+CP=${CP}:${JHOVE_HOME}/gif-hul-1.4.2-RC1.jar
+CP=${CP}:${JHOVE_HOME}/html-hul-1.4.1.jar
+CP=${CP}:${JHOVE_HOME}/jpeg-hul-1.5.2-RC1.jar
+CP=${CP}:${JHOVE_HOME}/jpeg2000-hul-1.4.2-RC1.jar
+CP=${CP}:${JHOVE_HOME}/pdf-hul-1.12.2-RC1.jar
+CP=${CP}:${JHOVE_HOME}/tiff-hul-1.9.2-RC1.jar
+CP=${CP}:${JHOVE_HOME}/utf8-hul-1.7.1.jar
+CP=${CP}:${JHOVE_HOME}/wave-hul-1.8.1-RC1.jar
+CP=${CP}:${JHOVE_HOME}/xml-hul-1.5.1.jar
 
 # Retrieve a copy of all command line arguments to pass to the application.
 # Since looping over the positional parameters is such a common thing to do in scripts,
@@ -50,6 +80,8 @@ ARGS="-c ${JHOVE_HOME}/jhove.conf"
 for ARG do
     ARGS="$ARGS $ARG"
 done
+
+echo $JHOVE_HOME
 
 # Set the CLASSPATH and invoke the Java loader.
 ${JAVA} -Xms128M -Xmx6000M -classpath $CP Jhove $ARGS
