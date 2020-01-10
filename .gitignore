@@ -7,3 +7,4 @@ doc/
 spec/fixtures/target/
 pkg/
 Gemfile.lock
+.DS_Store

@@ -27,9 +27,9 @@ describe JhoveService do
 
   it "produces the correct get_jhove_command" do
     jhove_cmd = @jhove_service.get_jhove_command(@content_dir)
-    expect(jhove_cmd).to eq "#{@bin.join('jhoveToolkit.sh')} -h xml -o \"#{@temp.join('jhove_output.xml')}\" \\\"#{@fixtures.join('test_files')}"
+    expect(jhove_cmd).to eq "./jhoveToolkit.sh -h xml -o \"#{@temp.join('jhove_output.xml')}\" \\\"#{@fixtures.join('test_files')}"
     jhove_cmd = @jhove_service.get_jhove_command(@content_dir,'/some/custom/output.xml')
-    expect(jhove_cmd).to eq "#{@bin.join('jhoveToolkit.sh')} -h xml -o \"/some/custom/output.xml\" \\\"#{@fixtures.join('test_files')}"
+    expect(jhove_cmd).to eq "./jhoveToolkit.sh -h xml -o \"/some/custom/output.xml\" \\\"#{@fixtures.join('test_files')}"
   end
 
   it "can run jhove against a directory" do
@@ -38,8 +38,8 @@ describe JhoveService do
     expect(jhove_xml.root.name).to eq('jhove')
     expect(count_nodes(jhove_xml)).to eq(2)
     expect(count_errors(jhove_xml)).to eq(0)
-    expect(jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')[0].content).to eq('Blue Square.wav') # path names should be relative
-    expect(jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove')[1].content).to eq('harmonica.mp3')
+    expect(jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://schema.openpreservation.org/ois/xml/ns/jhove')[0].content).to eq('Blue Square.wav') # path names should be relative
+    expect(jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://schema.openpreservation.org/ois/xml/ns/jhove')[1].content).to eq('harmonica.mp3')
   end
 
   it "can run jhove against a list of files in a directory" do
@@ -49,7 +49,7 @@ describe JhoveService do
     files_in_set = 6
     expect(count_nodes(jhove_xml)).to eq(files_in_set)
     expect(count_errors(jhove_xml)).to eq(0)
-    jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove').each do |filename_node|
+    jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://schema.openpreservation.org/ois/xml/ns/jhove').each do |filename_node|
       expect(filename_node.content.include?(@content_dir.to_s)).to be_falsey # path names should be relative
     end
     for i in 0..files_in_set-1
@@ -64,7 +64,7 @@ describe JhoveService do
     files_in_set = 6
     expect(count_nodes(jhove_xml)).to eq(files_in_set)
     expect(count_errors(jhove_xml)).to eq(0)
-    jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://hul.harvard.edu/ois/xml/ns/jhove').each do |filename_node|
+    jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://schema.openpreservation.org/ois/xml/ns/jhove').each do |filename_node|
       expect(filename_node.content.include?(@content_dir.to_s)).to be_falsey # path names should be relative
     end
     for i in 0..files_in_set-1
@@ -90,6 +90,19 @@ describe JhoveService do
     expect(nodes.size).to eq(6)
   end
 
+  it "can run jhove against an XHTML file without retrieving XSD/DTD from W3" do
+    # W3 throttles requests for XSD/DTDs, so using timing to test this.
+    # If this takes a long time (~45 secs), then not using cached XSD/DTD.
+    start = Time.now
+    jhove_output = @jhove_service.run_jhove(@content_dir.join('xhtml'))
+    expect(Time.now - start).to be < 5
+    jhove_xml = Nokogiri::XML(IO.read(jhove_output))
+    expect(jhove_xml.root.name).to eq('jhove')
+    expect(count_nodes(jhove_xml)).to eq(1)
+    expect(jhove_xml.xpath('//jhove:repInfo/@uri', 'jhove' => 'http://schema.openpreservation.org/ois/xml/ns/jhove')[0].content).to eq('00000001.html')
+    expect(jhove_xml.xpath('//jhove:status', 'jhove' => 'http://schema.openpreservation.org/ois/xml/ns/jhove')[0].content).to eq('Well-Formed, but not valid')
+  end
+
   specify "JhoveService#upgrade_technical_metadata" do
     old_tm_file = @samples.join('technicalMetadata-old.xml')
     new_tm = @jhove_service.upgrade_technical_metadata(old_tm_file.read)
@@ -100,7 +113,7 @@ describe JhoveService do
   specify "JhoveService#upgrade_technical_metadata for input with empty elements" do
     old_tm = <<-EOF
 <?xml version="1.0" encoding="UTF-8"?>
-<jhove xmlns="http://hul.harvard.edu/ois/xml/ns/jhove" xmlns:mix="http://www.loc.gov/mix/v10" xmlns:textmd="info:lc/xmlns/textMD-v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/jhove http://cosimo.stanford.edu/standards/jhove/v1/jhove.xsd" name="JhoveToolkit" release="1.0" date="2009-08-06">
+<jhove xmlns="http://schema.openpreservation.org/ois/xml/ns/jhove" xmlns:mix="http://www.loc.gov/mix/v10" xmlns:textmd="info:lc/xmlns/textMD-v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.openpreservation.org/ois/xml/ns/jhove https://schema.openpreservation.org/ois/xml/xsd/jhove/1.8/jhove.xsd" name="JhoveToolkit" release="1.0" date="2009-08-06">
     <repInfo uri="contentMetadata.xml">
         <format>XML</format>
         <sigMatch>
