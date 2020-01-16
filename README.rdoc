@@ -29,6 +29,7 @@ Run: 'rake release' to tag, build, and publish the gem
 - <b>1.1.1</b> Ensure only relative paths are shown in xml output
 - <b>1.1.2</b> Fix bug with filenames that contain single or double quotes
 - <b>1.1.4</b> Add p param to Pdf module configuration to ignore page metadata
+- <b>1.4.0</b> Upgraded bin/*.jar apps to 1.24-RC. Added caching of XHTML XSD/DTDs.
 
 == Copyright
 
