@@ -2,7 +2,7 @@
 {<img src="https://coveralls.io/repos/github/sul-dlss/jhove-service/badge.svg" alt="Coverage Status" />}[https://coveralls.io/github/sul-dlss/jhove-service]
 {<img src="https://badge.fury.io/rb/jhove-service.svg" alt="Gem Version" />}[https://badge.fury.io/rb/jhove-service]
 
-= jhove-service
+= jhove-service [DEPRECATED]
 
 Require the following:
   require 'jhove_service'
@@ -30,6 +30,7 @@ Run: 'rake release' to tag, build, and publish the gem
 - <b>1.1.2</b> Fix bug with filenames that contain single or double quotes
 - <b>1.1.4</b> Add p param to Pdf module configuration to ignore page metadata
 - <b>1.4.0</b> Upgraded bin/*.jar apps to 1.24-RC. Added caching of XHTML XSD/DTDs.
+- <b>1.4.1</b> Marked as deprecated
 
 == Copyright
 
